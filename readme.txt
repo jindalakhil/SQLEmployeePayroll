@@ -1,5 +1,8 @@
 Type '\help' or '\?' for help; '\quit' to exit.
  MySQL  JS > \sql
+
+UC 1-9
+
 Switching to SQL mode... Commands end with ;
  MySQL  SQL > \connect ajindal@host
 Creating a session to 'ajindal@host'
@@ -318,3 +321,111 @@ ERROR: 1064: You have an error in your SQL syntax; check the manual that corresp
 | start        | date         | NO   |     | NULL    |                |
 +--------------+--------------+------+-----+---------+----------------+
 12 rows in set (0.0395 sec)
+
+UC10
+
+UPDATE employee_payroll set department = 'Sales' WHERE name = 'Terisa';
+INSERT INTO employee_payroll(name, department, gender, basic_pay, deductions, taxable_pay, tax, net_pay, start) VALUES
+('Terisa','Marketing','F',300.0,100.0,200.0,500.0,150.0,'2018-01-03');
+
+
+UC11
+
+CREATE TABLE company(
+company_id      INT PRIMARY KEY,
+company_name    VARCHAR(250) NOT NULL);
+
+Query OK, 0 rows affected (1.9955 sec) 
+
+CREATE TABLE employee 					
+(
+ id 		INT unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ company_id 	INT REFERENCES company(company_id),
+ name           VARCHAR(200) NOT NULL,
+ phone_number 	VARCHAR(20) NOT NULL,
+ address 	VARCHAR(50) NOT NULL DEFAULT 'TBD',
+ gender 	CHAR(1) NOT NULL
+);
+
+Query OK, 0 rows affected (0.5254 sec) 
+
+CREATE TABLE payroll
+(
+ id 	INT REFERENCES employee(id),
+ basic_pay 	DOUBLE NOT NULL,
+ deductions 	DOUBLE NOT NULL,
+ taxable_pay 	DOUBLE NOT NULL,
+ tax 		DOUBLE NOT NULL,
+ net_pay 	DOUBLE NOT NULL
+);
+
+Query OK, 0 rows affected (0.4507 sec) 
+
+CREATE TABLE department
+(
+ dept_id 	INT PRIMARY KEY,
+ dept_name 	VARCHAR(50) NOT NULL
+);
+
+Query OK, 0 rows affected (0.5452 sec) 
+
+CREATE TABLE employee_department
+(
+ emp_id 	INT REFERENCES employee(id),
+ dept_id 	INT REFERENCES department(dept_id)
+);
+
+Query OK, 0 rows affected (0.4159 sec) 
+
+
+
+UC12
+
+INSERT INTO company VALUES 
+(1, "sony");
+
+Query OK, 1 row affected (0.4232 sec) 
+
+INSERT INTO employee(company_id, name, phone_number, address, gender) VALUES 					
+(1, 'Bill', '9876543210', 'a', 'M' ),
+(1, 'Terisa', '8876543211', 'b', 'F' ),
+(1, 'Charlie', '7876543212', 'c', 'M' ); 
+
+Query OK, 3 rows affected (0.1722 sec) 
+Records: 3  Duplicates: 0  Warnings: 0 
+
+SELECT * FROM employee;
++---+------------+---------------+--------------+---------+--------+
+| id| company_id | employee_name | phone_number | address | gender |
++---+------------+---------------+--------------+---------+--------+
+| 1 |          1 | Bill          | 9876543210   | a       | M      |
+| 1 |          1 | Terisa        | 8876543211   | b       | F      |
+| 1 |          2 | Charlie       | 7876543212   | c       | M      |
++---+------------+---------------+--------------+---------+--------+
+3 rows in set (0.00 sec)   
+
+
+INSERT INTO payroll VALUES 					
+(1,5000,500,4500,500,4000),
+(2,2000,200,1800,300,1500),
+(3,6000,600,5400,400,5000); 
+
+Query OK, 3 rows affected (0.3865 sec) 
+Records: 3  Duplicates: 0  Warnings: 0 
+
+INSERT INTO department VALUES
+(1,'Sales'),
+(2,'Marketing'),
+(3,'HR');
+
+Query OK, 3 rows affected (0.3482 sec) 
+Records: 3  Duplicates: 0  Warnings: 0  
+
+INSERT INTO employee_department VALUES
+(1,1),
+(2,1),
+(2,2),
+(3,3); 
+
+Query OK, 4 rows affected (0.2067 sec) 
+Records: 4  Duplicates: 0  Warnings: 0 
